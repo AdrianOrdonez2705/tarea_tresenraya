@@ -1,47 +1,117 @@
-package test.java;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+public class TresEnRayaTest {
 
-class TresEnRaya {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     private TresEnRaya tresEnRaya;
-    public final void before() {}
-
-    // Requerimiento 1
-    @Test
-    public void cuandoPiezaFueraXLanzarExcepcion() {}
 
     @Test
-    public void cuandoPiezaFueraYLanzarExcepcion() {}
+    public void cuandoFueraXlanzarExcepcion() {
+        tresEnRaya = new TresEnRaya();
+
+        assertThrows(Exception.class, () -> {
+            tresEnRaya.jugar(5, 2);
+        });
+    }
 
     @Test
-    public void cuandoPiezaLugarOcupadoLanzarExcepcion() {}
+    public void cuandoFueraYlanzarExcepcion() {
+        tresEnRaya = new TresEnRaya();
 
-    // Requerimiento 2
-    @Test
-    public void cuandoPrimerTurnoSiempreJuegaX() {}
-
-    @Test
-    public void siUltimoTurnoXSiguienteTurnoCruz() {}
-
-    @Test void siUltimoTurnoCruzSiguienteTurnoX() {}
-
-    // Requerimiento 3
-    @Test
-    public void siNoCondicionVictoriaEntoncesNoGanador() {}
+        assertThrows(Exception.class, () -> {
+            tresEnRaya.jugar(2, 5);
+        });
+    }
 
     @Test
-    public void SiJugadorOcupaLineaHorizontalEntoncesGana() {}
+    public void cuandoLugarOcupadoLanzarExcepcion() throws Exception {
+        tresEnRaya = new TresEnRaya();
+
+        tresEnRaya.jugar(1, 3);
+
+        assertThrows(Exception.class, () -> {
+            tresEnRaya.jugar(1, 3);
+        });
+    }
 
     @Test
-    public void SiJugadorOcupaLineaVerticalEntoncesGana() {}
+    public void siPrimerTurnoEntoncesJuegaX() {
+        tresEnRaya = new TresEnRaya();
+
+        assertEquals('X', tresEnRaya.siguienteTurno());
+    }
 
     @Test
-    public void SiJugadorOcupaLineaDiagonalEntoncesGana() {}
+    public void siPrimerTurnoXSiguienteMas() throws Exception {
+        tresEnRaya = new TresEnRaya();
 
+        // x
+        tresEnRaya.jugar(2, 1);
+        assertEquals('+', tresEnRaya.siguienteTurno());
+        // +
+        tresEnRaya.jugar(2, 2);
+        assertEquals('X', tresEnRaya.siguienteTurno());
+    }
+
+    @Test
+    public void cuandoNoHayGanador() throws Exception {
+        tresEnRaya = new TresEnRaya();
+
+        String resultado = tresEnRaya.jugar(2, 1);
+        assertEquals("No hay ganador", resultado);
+    }
+
+    @Test
+    public void siLlenaColumnaEntoncesGana() throws Exception {
+        tresEnRaya = new TresEnRaya();
+
+        tresEnRaya.jugar(1, 1); // x
+        tresEnRaya.jugar(1, 2); // +
+        tresEnRaya.jugar(2, 1); // x
+        tresEnRaya.jugar(2, 2); // +
+        String resultado = tresEnRaya.jugar(3, 1); // x
+
+        assertEquals("X es el ganador", resultado);
+    }
+
+    @Test
+    public void siLlenaFilaEntoncesGana() throws Exception {
+        tresEnRaya = new TresEnRaya();
+
+        tresEnRaya.jugar(2, 1); // x
+        tresEnRaya.jugar(1, 1); // +
+        tresEnRaya.jugar(3, 1); // x
+        tresEnRaya.jugar(1, 2); // +
+        tresEnRaya.jugar(2, 2); // x
+        String resultado = tresEnRaya.jugar(1, 3); // x
+
+        assertEquals("+ es el ganador", resultado);
+    }
+
+    @Test
+    public void siLlenaDiagonalEntoncesGana() throws Exception {
+        tresEnRaya = new TresEnRaya();
+
+        tresEnRaya.jugar(1, 1); // x
+        tresEnRaya.jugar(1, 2); // +
+        tresEnRaya.jugar(2, 2); // x
+        tresEnRaya.jugar(1, 3); // +
+        String resultado = tresEnRaya.jugar(3, 3); // x
+
+        assertEquals("X es el ganador", resultado);
+    }
+
+    @Test
+    public void siLlenaDiagonalOpuestaEntoncesGana() throws Exception {
+        tresEnRaya = new TresEnRaya();
+
+        tresEnRaya.jugar(1, 2); // x
+        tresEnRaya.jugar(1, 3); // +
+        tresEnRaya.jugar(1, 1); // x
+        tresEnRaya.jugar(2, 2); // +
+        tresEnRaya.jugar(2, 3); // x
+        String resultado = tresEnRaya.jugar(3, 1); // +
+
+        assertEquals("+ es el ganador", resultado);
+    }
 }
